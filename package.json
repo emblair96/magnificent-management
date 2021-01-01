@@ -1,0 +1,28 @@
+{
+  "name": "magnificent-management",
+  "version": "1.0.0",
+  "description": "An app to make you a magnificent manager.  Keep track of your employee database all through your command line.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "watch": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emblair96/magnificent-management.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emblair96/magnificent-management/issues"
+  },
+  "homepage": "https://github.com/emblair96/magnificent-management#readme",
+  "dependencies": {
+    "inquirer": "^7.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
