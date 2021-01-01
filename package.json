@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/emblair96/magnificent-management#readme",
   "dependencies": {
-    "inquirer": "^7.3.3"
+    "inquirer": "^7.3.3",
+    "mysql": "^2.18.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
