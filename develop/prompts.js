@@ -44,6 +44,42 @@ const managers = [
     }
 ];
 
+const newEmployee = [
+    {
+        name: "role",
+        type: "list",
+        message: "Select which role the new employee has.",
+        choices: function() {
+            var choiceArray = [];
+            res.forEach(role => {
+                choiceArray.push(role.title) 
+             });
+             return choiceArray;
+             console.log(choiceArray)
+        } 
+    },
+    {
+        name: "firstName",
+        type: "input",
+        message: "Employee's first name"
+    },
+    {
+        name: "lastName",
+        type: "input",
+        message: "Employee's last name"
+    },
+    {
+        name: "department",
+        type: "input",
+        message: "Employee's last name"
+    },
+    {
+        name: "manager",
+        type: "rawlist",
+        message: "Who will be the employee's manager?"
+    }
+];
+
 
 function Prompt(name, type, message, choices) {
     this.name = name;
@@ -55,6 +91,7 @@ function Prompt(name, type, message, choices) {
 module.exports = {
     actions,
     departments,
-    managers
+    managers,
+    newEmployee
 }
 
