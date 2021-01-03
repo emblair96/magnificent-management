@@ -1,16 +1,14 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-const { actions, departments, managers, newEmployee } = require("./develop/prompts");
-const { queryEmployees, queryByDept, queryManagers, queryByManager, querySpecificRole, queryRoles, queryDepts, testQuery } = require("./develop/queries");
-//const { Query } = require("./develop/constructors")
 const cTable = require('console.table');
+
+const { actions, departments, managers, newEmployee } = require("./develop/prompts");
+const { queryEmployees, queryByDept, queryManagers, queryByManager, querySpecificRole, queryRoles, queryDepts } = require("./develop/queries");
+//const { Query } = require("./develop/constructors")
+
 
 function Query(queryStr) {
     this.queryStr = queryStr;
-    // this.initiateQuery = connection.query(query, function (err, res) {
-    //     if (err) throw err;
-    //     console.table(res);
-    // });
 };
 
 Query.prototype.initiateQuery = function () {
@@ -18,6 +16,29 @@ Query.prototype.initiateQuery = function () {
         if (err) throw err;
         console.table(res);
         start();
+    });
+};
+
+Query.prototype.viewByQuery = function(prompt, newQuery) {
+    connection.query(this.queryStr, function (err, res) {
+        let list = [];
+        res.forEach((item) => {
+            if (list.includes(item.first_name) === false) {
+                list.push(item.first_name)
+            }; 
+        });
+
+        // Create a choices key with a value set to the managerList array
+        prompt[0].choices = list;
+
+        // Prompt the user to select a manager they would like to view supervisees for
+        inquirer.prompt(prompt).then((response) => {
+            connection.query(newQuery, response.view, function (err, res) {
+                if (err) throw err;
+                console.table(res);
+                start();
+            });
+        });
     });
 };
 
@@ -37,30 +58,39 @@ connection.connect(function (err) {
     start();
 });
 
-//managerList();
-
-function getManger() {
-    connection.query(queryManagers, function (err, res) {
-        res.forEach((manager) => {
-            list.push({ first_name: manager.first_name, id: manager.id })
-            console.log("inside function", list)
-        });
-    });
-};
-
 // Start the inquirer prompts, execute a different function based on user response
+/*
+function start() {
+    inquirer.prompt(actions).then((response) => {
+        switch(response.action) {
+            case "View all employees":
+                let viewEmployees = new Query(queryEmployees);
+                viewEmployees.initiateQuery();
+            default:
+                console.log("something went wrong.");
+                start();
+        }
+        
+    });
+}
+*/
+
 function start() {
     inquirer.prompt(actions).then((response) => {
         if (response.action === "View all employees") {
-            viewEmployees();
+            let viewEmployees = new Query(queryEmployees);
+            viewEmployees.initiateQuery();
         };
+
 
         if (response.action === "View all employees by department") {
             viewEmployeesByDept();
         };
 
         if (response.action === "View all employees by manager") {
-            viewEmployeesByManager();
+            let viewEmployeesByManager = new Query(queryManagers);
+            viewEmployeesByManager.viewByQuery(managers, queryByManager);
+
         }
 
         if (response.action === "Add employee") {
@@ -75,12 +105,9 @@ function start() {
             updateRole()
         }
 
-        if (response.action === "Update employee manager") {
-
-        }
-
         if (response.action === "View all roles") {
-            viewRoles();
+            let viewRoles = new Query(queryRoles);
+            viewRoles.initiateQuery();
         }
 
         if (response.action === "Add role") {
@@ -92,30 +119,16 @@ function start() {
         }
 
         if (response.action === "View all departments") {
-            let viewDept = new Query(queryDepts);
-            viewDept.initiateQuery();
+            let viewDepts = new Query(queryRoles);
+            viewDepts.initiateQuery();
         }
 
         if (response.action === "Add department") {
             addDept();
         }
 
-        if (response.action === "Remove department") {
-
-        }
-
     });
-
-};
-
-// Option #1, view all employees
-function viewEmployees() {
-    connection.query(queryEmployees, function (err, res) {
-        if (err) throw err;
-        console.table(res);
-        start();
-        //connection.end();
-    });
+   
 };
 
 // Option #2, view employees by dept
@@ -128,31 +141,6 @@ function viewEmployeesByDept() {
         });
     })
 
-};
-
-// Option #3, view employees by manager
-function viewEmployeesByManager() {
-    // Query to obtain a list of all managers
-    connection.query(queryManagers, function (err, res) {
-        let managerList = [];
-        res.forEach((manager) => {
-            if (managerList.includes(manager.first_name) === false) {
-                managerList.push(manager.first_name)
-            }; 
-        });
-
-        // Create a choices key with a value set to the managerList array
-        managers[0].choices = managerList;
-
-        // Prompt the user to select a manager they would like to view supervisees for
-        inquirer.prompt(managers).then((response) => {
-            connection.query(queryByManager, response.manager, function (err, res) {
-                if (err) throw err;
-                console.table(res);
-                start();
-            });
-        });
-    });
 };
 
 function addEmployee() {
@@ -244,56 +232,6 @@ function addEmployee() {
     });
 };
 
-// Option #4, add employee
-function addEmployeeOLD() {
-    var newQuery = "SELECT e.first_name, e.role_id, d.id AS department_id FROM employees e INNER JOIN roles r ON e.role_id = r.id INNER JOIN departments d ON r.department_id = d.id";
-
-    // var checkRoles = new Query(queryRoles);
-    // checkRoles.obtainInfoQuery(title, newEmployee);
-    connection.query(newQuery, function (err, res) {
-        let list = [];
-        console.log(res)
-        res.forEach((role) => {
-            list.push(role.title)
-        });
-
-        // Create a choices key with a value set to the managerList array
-        newEmployee[0].choices = list;
-
-        connection.query(queryManagers, function (err, res) {
-            let managerList = ["N/A"];
-            res.forEach((manager) => {
-                managerList.push(manager.first_name)
-            });
-
-            // Create a choices key with a value set to the managerList array
-            newEmployee[newEmployee.length - 1].choices = managerList;
-
-            inquirer.prompt(newEmployee).then((response) => {
-                connection.query(newQuery, response.manager, function (err, res) {
-                    var manager_id = response.id
-
-
-                    connection.query(queryByDept, function (err, res) {
-
-                    })
-                });
-                // connection.query(queryAddEmployee, )
-                // console.log(response)
-            });
-        });
-    });
-
-
-
-};
-
-function managerLookUp() {
-    connection.query(queryManagers, function (res, err) {
-        let managerList = res;
-    });
-};
-
 // Option #5, remove employee
 function removeEmployee() {
     var query = "SELECT first_name, last_name FROM employees"
@@ -369,17 +307,6 @@ function updateRole() {
         });
     });
 }
-
-// Option #7, update employee manager
-
-// Option #8, view all roles
-function viewRoles() {
-    connection.query(queryRoles, function (err, res) {
-        if (err) throw err;
-        console.table(res);
-        start();
-    });
-};
 
 // Option #9, add role
 function addRole() {

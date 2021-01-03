@@ -1,42 +1,3 @@
-const mysql = require("mysql");
-const inquirer = require("inquirer");
-//const { start } = require("../server.js");
-
-var connection = mysql.createConnection({
-    host: "localhost",
-    port: process.env.PORT || 3306,
-    user: "root",
-    password: "password",
-    database: "employee_mngmt_db"
-});
-
-function Query(queryStr) {
-    this.queryStr = queryStr;
-    // this.initiateQuery = connection.query(query, function (err, res) {
-    //     if (err) throw err;
-    //     console.table(res);
-    // });
-};
-
-Query.prototype.initiateQuery = function () {
-    connection.query(this.queryStr, function (err, res) {
-        if (err) throw err;
-        console.table(res);
-        start();
-    });
-};
-
-Query.prototype.deleteQuery = function () {
-    connection.query(this.queryStr, function (err, res) {
-        if (err) throw err;
-        console.table(res);
-        start();
-        inquirer.prompt("DELETE FROM employees WHERE first_name ? ")
-    });
-};
-
-
-
 let queryEmployees = "SELECT e.id, e.first_name, e.last_name, r.title, r.salary, d.department_name FROM employees e INNER JOIN roles r ON e.role_id = r.id INNER JOIN departments d ON r.department_id = d.id ORDER BY id";
 
 let queryByDept = "SELECT e.id AS employee_id, e.first_name, e.last_name, d.department_name, r.title FROM employees e INNER JOIN roles r ON e.role_id = r.id INNER JOIN departments d ON r.department_id = d.id WHERE department_name = ? ORDER BY e.id";
@@ -47,13 +8,9 @@ let queryByManager = "SELECT a.id AS manager_id, a.first_name AS manager, b.firs
 
 let querySpecificRole = "SELECT * FROM roles WHERE title = ?";
 
-// let queryAddEmployee = "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
-
 let queryRoles = "SELECT title FROM roles";
 
 let queryDepts = "SELECT * FROM departments";
-
-let testQuery = "SELECT ? FROM ? WHERE ? = ?"
 
 module.exports = {
     queryEmployees,
@@ -62,23 +19,5 @@ module.exports = {
     queryByManager,
     querySpecificRole,
     queryRoles, 
-    queryDepts,
-    testQuery,
-    Query
+    queryDepts
 };
-
-
-
-// Query.prototype.obtainInfoQuery = function (column, prompt) {
-//     //var column = column;
-//     connection.query(this.queryStr, function (err, res, fields) {
-//         var colName = fields[0].name
-//         let list = [];
-//         res.forEach((item) => {
-//             list.push(item.column)
-//         });
-
-//         // Create a choices key with a value set to the managerList array
-//         prompt[0].choices = list;
-//     })
-// };

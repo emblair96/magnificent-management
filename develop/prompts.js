@@ -10,13 +10,11 @@ const actions = [
             "Add employee",
             "Remove employee",
             "Update employee role",
-            "Update employee manager",
             "View all roles",
             "Add role",
             "Remove role",
             "View all departments",
-            "Add department",
-            "Remove department"
+            "Add department"
         ]
     }
 ];
@@ -37,7 +35,7 @@ const departments = [
 
 const managers = [
     {
-        name: "manager",
+        name: "view",
         type: "rawlist",
         message: "Select a manager to view their supervisees."
     }
@@ -78,14 +76,6 @@ const newEmployee = [
         message: "Who will be the employee's manager?"
     }
 ];
-
-
-function Prompt(name, type, message, choices) {
-    this.name = name;
-    this.type = type;
-    this.message = message;
-    this.choices = choices;
-};
 
 module.exports = {
     actions,
