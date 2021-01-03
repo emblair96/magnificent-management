@@ -119,7 +119,7 @@ function start() {
         }
 
         if (response.action === "View all departments") {
-            let viewDepts = new Query(queryRoles);
+            let viewDepts = new Query(queryDepts);
             viewDepts.initiateQuery();
         }
 
