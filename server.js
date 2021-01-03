@@ -2,9 +2,8 @@ const mysql = require("mysql");
 const inquirer = require("inquirer");
 const cTable = require('console.table');
 
-const { actions, departments, managers, newEmployee } = require("./develop/prompts");
-const { queryEmployees, queryByDept, queryManagers, queryByManager, querySpecificRole, queryRoles, queryDepts } = require("./develop/queries");
-//const { Query } = require("./develop/constructors")
+const { actions, departments, managers } = require("./develop/prompts");
+const { queryEmployees, queryByDept, queryManagers, queryByManager, queryRoles, queryDepts } = require("./develop/queries");
 
 function Query(queryStr) {
     this.queryStr = queryStr;
@@ -58,21 +57,6 @@ connection.connect(function (err) {
 });
 
 // Start the inquirer prompts, execute a different function based on user response
-/*
-function start() {
-    inquirer.prompt(actions).then((response) => {
-        switch(response.action) {
-            case "View all employees":
-                let viewEmployees = new Query(queryEmployees);
-                viewEmployees.initiateQuery();
-            default:
-                console.log("something went wrong.");
-                start();
-        }
-        
-    });
-}
-*/
 
 function start() {
     inquirer.prompt(actions).then((response) => {
@@ -87,7 +71,7 @@ function start() {
         };
 
         if (response.action === "View all employees by manager") {
-            let viewEmployeesByManager = new Query(queryManagers, firstName);
+            let viewEmployeesByManager = new Query(queryManagers);
             viewEmployeesByManager.viewByQuery(managers, queryByManager);
 
         }

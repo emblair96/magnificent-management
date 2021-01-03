@@ -6,8 +6,6 @@ let queryManagers = "SELECT a.first_name AS name, a.id FROM employees a INNER JO
 
 let queryByManager = "SELECT a.id AS manager_id, a.first_name AS manager, b.first_name, b.last_name FROM employees a INNER JOIN employees b ON a.id = b.manager_id WHERE a.first_name = ?"; 
 
-let querySpecificRole = "SELECT * FROM roles WHERE title = ?";
-
 let queryRoles = "SELECT title FROM roles";
 
 let queryDepts = "SELECT department_name AS name FROM departments";
@@ -17,7 +15,6 @@ module.exports = {
     queryByDept,
     queryManagers,
     queryByManager,
-    querySpecificRole,
     queryRoles, 
     queryDepts
 };

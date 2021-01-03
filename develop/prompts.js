@@ -23,13 +23,7 @@ const departments = [
     {
         name: "view",
         type: "rawlist",
-        message: "What would you like to do?",
-        // choices: [
-        //     "Sales",
-        //     "Engineering",
-        //     "Finance",
-        //     "Legal"
-        // ]
+        message: "What would you like to do?"
     }
 ];
 
@@ -41,46 +35,9 @@ const managers = [
     }
 ];
 
-const newEmployee = [
-    {
-        name: "role",
-        type: "list",
-        message: "Select which role the new employee has.",
-        choices: function() {
-            var choiceArray = [];
-            res.forEach(role => {
-                choiceArray.push(role.title) 
-             });
-             return choiceArray;
-             console.log(choiceArray)
-        } 
-    },
-    {
-        name: "firstName",
-        type: "input",
-        message: "Employee's first name"
-    },
-    {
-        name: "lastName",
-        type: "input",
-        message: "Employee's last name"
-    },
-    {
-        name: "department",
-        type: "input",
-        message: "Employee's last name"
-    },
-    {
-        name: "manager",
-        type: "rawlist",
-        message: "Who will be the employee's manager?"
-    }
-];
-
 module.exports = {
     actions,
     departments,
-    managers,
-    newEmployee
-}
+    managers
+};
 
