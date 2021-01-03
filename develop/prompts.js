@@ -9,7 +9,6 @@ const actions = [
             "View all employees by manager",
             "Add employee",
             "Remove employee",
-            // "Update employee",
             "Update employee role",
             "Update employee manager",
             "View all roles",

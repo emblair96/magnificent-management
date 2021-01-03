@@ -86,7 +86,7 @@ function start() {
         }
 
         if (response.action === "Update employee role") {
-
+            updateRole()
         }
 
         if (response.action === "Update employee manager") {
@@ -306,7 +306,7 @@ function managerLookUp() {
     connection.query(queryManagers, function (res, err) {
         let managerList = res;
     });
-}
+};
 
 // Option #5, remove employee
 function removeEmployee() {
@@ -336,6 +336,53 @@ function removeEmployee() {
 };
  
 // Option #6, update employee role
+function updateRole() {
+    connection.query("SELECT first_name, id FROM employees", function (err, res) {
+        if (err) {
+            console.log(err.sqlMessage)
+        }
+        inquirer.prompt([
+            {
+                name: "employee",
+                type: "rawlist",
+                message: "Select which employee you would like to update.",
+                choices: function () {
+                    var choiceArray = [];
+                    res.forEach(employee => {
+                        choiceArray.push(employee.first_name)
+                    })
+                    return choiceArray;
+                }
+            },
+            {
+                name: "role",
+                type: "input",
+                message: "What is the new title of their role?"
+            }
+        ]).then((response) => {
+            var employeeName = response.employee;
+            connection.query("SELECT id FROM roles WHERE title = ?", [response.role], function(err, res) {
+                if (err) {
+                    console.log(err.sqlMessage)
+                    start();
+                }
+                console.log(res)
+                connection.query("UPDATE employees SET ? WHERE ?", 
+                [
+                {
+                    role_id: res[0].id
+                },
+                {
+                    first_name: employeeName
+                }
+                ], function(err, res) {
+                    console.log("Role successfully updated.")
+                    start();
+                });
+            })
+        });
+    });
+}
 
 // Option #7, update employee manager
 
