@@ -21,20 +21,6 @@ Query.prototype.initiateQuery = function () {
     });
 };
 
-Query.prototype.obtainInfoQuery = function (column, prompt) {
-    //var column = column;
-    connection.query(this.queryStr, function (err, res, fields) {
-        var colName = fields[0].name
-        let list = [];
-        res.forEach((item) => {
-            list.push(item.column)
-        });
-
-        // Create a choices key with a value set to the managerList array
-        prompt[0].choices = list;
-    })
-};
-
 // Create the connection information for the sql database
 var connection = mysql.createConnection({
     host: "localhost",
@@ -111,7 +97,7 @@ function start() {
         }
 
         if (response.action === "Add department") {
-
+            addDept();
         }
 
         if (response.action === "Remove department") {
@@ -483,5 +469,23 @@ function removeRole() {
 };
 
 // Option #12, add department
+function addDept() {
+    inquirer.prompt([
+        {
+            name: "dept",
+            type: "input",
+            message: "What is the name of the department you would like to add?",
+        }
+    ]).then((response) => {
+        connection.query("INSERT INTO departments (department_name) VALUES (?)", [response.dept], function(err, res) {
+            if (err) {
+                console.log(err.sqlMessage)
+                start();
+            }
+            console.log("Department successfully added.")
+            start();
+        })
+    })
+}
 
 // Option #13, remove department

@@ -66,3 +66,19 @@ module.exports = {
     testQuery,
     Query
 };
+
+
+
+// Query.prototype.obtainInfoQuery = function (column, prompt) {
+//     //var column = column;
+//     connection.query(this.queryStr, function (err, res, fields) {
+//         var colName = fields[0].name
+//         let list = [];
+//         res.forEach((item) => {
+//             list.push(item.column)
+//         });
+
+//         // Create a choices key with a value set to the managerList array
+//         prompt[0].choices = list;
+//     })
+// };
