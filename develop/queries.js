@@ -1,4 +1,5 @@
 const mysql = require("mysql");
+const inquirer = require("inquirer");
 //const { start } = require("../server.js");
 
 var connection = mysql.createConnection({
@@ -22,6 +23,15 @@ Query.prototype.initiateQuery = function () {
         if (err) throw err;
         console.table(res);
         start();
+    });
+};
+
+Query.prototype.deleteQuery = function () {
+    connection.query(this.queryStr, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+        inquirer.prompt("DELETE FROM employees WHERE first_name ? ")
     });
 };
 

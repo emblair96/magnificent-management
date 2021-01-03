@@ -91,6 +91,10 @@ function start() {
             addEmployee();
         }
 
+        if (response.action === "Remove employee") {
+            removeEmployee();
+        }
+
         if (response.action === "View all roles") {
             viewRoles();
         }
@@ -99,8 +103,6 @@ function start() {
             let viewDept = new Query(queryDepts);
             viewDept.initiateQuery();
         }
-
-        //start();
 
     });
 
@@ -154,8 +156,8 @@ function viewEmployeesByManager() {
 };
 
 function addEmployee() {
-    var newQuery = "SELECT e.first_name, e.last_name, e.role_id, d.id AS department_id, r.title, e.manager_id, d.department_name FROM employees e RIGHT JOIN roles r ON e.role_id = r.id INNER JOIN departments d ON r.department_id = d.id"
-    connection.query(newQuery, function (err, res) {
+    var query = "SELECT e.first_name, e.last_name, e.role_id, d.id AS department_id, r.title, e.manager_id, d.department_name FROM employees e RIGHT JOIN roles r ON e.role_id = r.id INNER JOIN departments d ON r.department_id = d.id"
+    connection.query(query, function (err, res) {
         if (err) throw err;
         inquirer.prompt([
             {
@@ -293,6 +295,37 @@ function managerLookUp() {
 }
 
 // Option #5, remove employee
+function removeEmployee() {
+    var query = "SELECT first_name, last_name FROM employees"
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        inquirer.prompt([
+            {
+                name: "employee",
+                type: "rawlist",
+                message: "Select which employee you would like to delete.",
+                choices: function () {
+                    var choiceArray = [];
+                    res.forEach(employee => {
+                        choiceArray.push(employee.first_name)
+                    })
+                    return choiceArray;
+                }
+            }
+        ]).then((response) => {
+            connection.query("DELETE FROM employees WHERE first_name = ?", [response.employee], function(err, res) {
+                console.log("Succesfully deleted.")
+                start();
+            })
+        })
+        // inquirer.prompt("DELETE FROM employees WHERE first_name ? ")
+    });
+
+    
+
+
+}
+ 
 
 // Option #6, update employee role
 
@@ -310,11 +343,6 @@ function viewRoles() {
 // Option #9, add role
 
 // Option #10, remove role
-
-// Option #11, view all departments NOT WORKING
-function viewDepartments() {
-
-}
 
 // Option #12, add department
 
