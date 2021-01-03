@@ -5,9 +5,9 @@ An app to make you a magnificent manager. No experience with database management
 
 ## Technologies
 * JavaScript
-* Node.js
-* [Inquirer.js](https://www.npmjs.com/package/inquirer)
-* mySQL
+* Node.js v14.15.0
+* [Inquirer.js](https://www.npmjs.com/package/inquirer) v7.3.3
+* [mySQL](https://www.npmjs.com/package/mysql) v2.18.1
 
 ## Installation
 To install the necessary dependencies to run this application on your local machine:
@@ -19,10 +19,7 @@ npm --i
 ## Usage
 Here's a quick look at what this app can do:  
 
-![magnificent-management-app-demo](assets/.gif)
-
-## Areas for improvement
-
+![magnificent-management-app-demo](assets/cms-app-demo.gif)
 
 ## License
 Copyright &copy; Licensed under the MIT license.
