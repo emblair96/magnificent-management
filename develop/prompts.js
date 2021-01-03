@@ -21,15 +21,15 @@ const actions = [
 
 const departments = [
     {
-        name: "department",
+        name: "view",
         type: "rawlist",
         message: "What would you like to do?",
-        choices: [
-            "Sales",
-            "Engineering",
-            "Finance",
-            "Legal"
-        ]
+        // choices: [
+        //     "Sales",
+        //     "Engineering",
+        //     "Finance",
+        //     "Legal"
+        // ]
     }
 ];
 

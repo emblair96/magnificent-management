@@ -6,7 +6,6 @@ const { actions, departments, managers, newEmployee } = require("./develop/promp
 const { queryEmployees, queryByDept, queryManagers, queryByManager, querySpecificRole, queryRoles, queryDepts } = require("./develop/queries");
 //const { Query } = require("./develop/constructors")
 
-
 function Query(queryStr) {
     this.queryStr = queryStr;
 };
@@ -23,8 +22,8 @@ Query.prototype.viewByQuery = function(prompt, newQuery) {
     connection.query(this.queryStr, function (err, res) {
         let list = [];
         res.forEach((item) => {
-            if (list.includes(item.first_name) === false) {
-                list.push(item.first_name)
+            if (list.includes(item.name) === false) {
+                list.push(item.name)
             }; 
         });
 
@@ -82,13 +81,13 @@ function start() {
             viewEmployees.initiateQuery();
         };
 
-
         if (response.action === "View all employees by department") {
-            viewEmployeesByDept();
+            let viewEmployeesByDept = new Query(queryDepts);
+            viewEmployeesByDept.viewByQuery(departments, queryByDept);
         };
 
         if (response.action === "View all employees by manager") {
-            let viewEmployeesByManager = new Query(queryManagers);
+            let viewEmployeesByManager = new Query(queryManagers, firstName);
             viewEmployeesByManager.viewByQuery(managers, queryByManager);
 
         }
@@ -102,7 +101,7 @@ function start() {
         }
 
         if (response.action === "Update employee role") {
-            updateRole()
+            updateRole();
         }
 
         if (response.action === "View all roles") {
@@ -126,21 +125,8 @@ function start() {
         if (response.action === "Add department") {
             addDept();
         }
-
     });
    
-};
-
-// Option #2, view employees by dept
-function viewEmployeesByDept() {
-    inquirer.prompt(departments).then((response) => {
-        connection.query(queryByDept, response.department, function (err, res) {
-            if (err) throw err;
-            console.table(res);
-            start();
-        });
-    })
-
 };
 
 function addEmployee() {
@@ -386,6 +372,7 @@ function removeRole() {
             connection.query("DELETE FROM roles WHERE title = ?", [response.role], function(err, res) {
                 if (err) {
                     console.log(err.sqlMessage);
+                    console.log("We weren't able to delete that role.  This is most likely because one of your employees is currently assigned this role.  Please first update the employee's role, then you can delete the role.")
                 } else {
                     console.log("Succesfully deleted.");
                 }
@@ -413,6 +400,4 @@ function addDept() {
             start();
         })
     })
-}
-
-// Option #13, remove department
+};

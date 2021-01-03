@@ -1,4 +1,5 @@
 const mysql = require("mysql");
+const { start } = require("../server")
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -16,6 +17,7 @@ Query.prototype.initiateQuery = function () {
     connection.query(this.queryStr, function (err, res) {
         if (err) throw err;
         console.table(res);
+        start();
     });
 };
 
